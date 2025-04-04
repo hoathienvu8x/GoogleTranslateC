@@ -1,4 +1,5 @@
 #include "sha1.h"
+#include <stdio.h>
 #include <string.h>
 
 
@@ -124,4 +125,14 @@ void SHA1(const uint8_t* data, uint32_t len, uint8_t digest[SHA1_BLOCK_SIZE]) {
   SHA1Init(&ctx);
   SHA1Update(&ctx, data, len);
   SHA1Final(digest, &ctx);
+}
+void SHA1_Hash(const uint8_t* data, uint32_t len, char hexresult[SHA1_BLOCK_SIZE * 2 + 1]) {
+  uint8_t digest[SHA1_BLOCK_SIZE];
+  size_t offset;
+
+  SHA1(data, len, digest);
+  for( offset = 0; offset < SHA1_BLOCK_SIZE; offset++) {
+    sprintf( ( hexresult + (2*offset)), "%02x", digest[offset] & 0xff);
+  }
+  hexresult[SHA1_BLOCK_SIZE * 2 + 1] = '\0';
 }

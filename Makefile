@@ -1,39 +1,37 @@
-#
-# SPDX-License-Identifier: GPL-2.0
-#
-# @author Ammar Faizi <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
-# @license GNU GPL-2.0
-# @link https://github.com/ammarfaizi2/GoogleTranslateC
-#
-# Google Translate scraper library.
-#
-# Copyright (C) 2021  Ammar Faizi
-#
+CC = gcc
+LDFLAGS = -I. -ldl -lpthread -lcurl -lsqlite3
+ifeq ($(build),release)
+	CFLAGS = -O3
+	LDFLAGS += -DNDEBUG=1
+else
+	CFLAGS = -Og -g
+endif
+CFLAGS += -std=c11 -Wall -Wextra -Werror -pedantic
+RM = rm -rf
 
-CC 	:= clang
-LD	:= $(CC)
-VG	:= valgrind
-CFLAGS	:= -Wall -Wextra -pedantic-errors -std=c11 -O3 -ggdb3
-VGFLAGS	:= --leak-check=full --show-leak-kinds=all --track-origins=yes
-LD_SHARED_LIB	:= -lcurl -lpthread
+OBJECTS = cgtranslate.o sha1.o
+OBJECTS := $(addprefix objects/,$(OBJECTS))
+EXECUTABLE = translate
 
-export LD_LIBRARY_PATH=$(PWD)
+all: objects $(EXECUTABLE)
 
-all: main
+objects:
+	@echo "Create 'objects' folder ..."
+	@mkdir -p objects
 
+$(EXECUTABLE): objects/main.o $(OBJECTS)
+ifeq ($(build),release)
+	@echo "Build release '$@' executable ..."
+else
+	@echo "Build '$@' executable ..."
+endif
+	@$(CC) objects/main.o $(OBJECTS) -o $@ $(LDFLAGS)
+	@$(RM) objects/main.o
 
-main: main.c sha1.c libcgtranslate.so
-	$(CC) $(CFLAGS) -fpie -fPIE $(^) -o $(@)
-
-libcgtranslate.so: cgtranslate.c cgtranslate.h
-	$(CC) $(CFLAGS) -fpic -fPIC $(<) -shared -o $(@) $(LD_SHARED_LIB)
-
+objects/%.o: %.c
+	@echo "Build '$@' object ..."
+	@$(CC) -c $(CFLAGS) $< -o $@ $(LDFLAGS)
 
 clean:
-	$(RM) -vf libcgtranslate.so main
-
-
-run: main
-	$(VG) $(VGFLAGS) ./$(<)
-
-.PHONY: all clean run
+	@echo "Cleanup ..."
+	@$(RM) $(OBJECTS) $(EXECUTABLE)
