@@ -6,6 +6,7 @@ Google Translate library for C language.
 - libcurl4
 - libcurl4-gnutls-dev
 - libpthread
+- libsqlite3-dev
 
 
 # Minimal Working Example
