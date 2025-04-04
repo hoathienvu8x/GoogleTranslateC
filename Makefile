@@ -22,7 +22,7 @@ export LD_LIBRARY_PATH=$(PWD)
 all: main
 
 
-main: main.c libcgtranslate.so
+main: main.c sha1.c libcgtranslate.so
 	$(CC) $(CFLAGS) -fpie -fPIE $(^) -o $(@)
 
 libcgtranslate.so: cgtranslate.c cgtranslate.h
