@@ -213,7 +213,7 @@ int cgtr_set_local_trans(sqlite3 *db, const char *hash_code,
 	return -1;
 }
 
-int main(void)
+int main(int argc, const char **argv)
 {
 	int ret;
 	char curdir[128];
@@ -222,11 +222,28 @@ int main(void)
 	char sqlitedb_dir[256];
 	char sha1_hash[SHA1_BLOCK_SIZE * 2 + 1] = {0};
 	char *result = NULL;
-	const char from[] = "en";
-	const char to[] = "ja";
-	const char text[] = "Good morning";
+	const char *from = NULL;
+	const char *to = NULL;
+	const char *text = NULL;
 	cgtranslate_t *cg;
 	sqlite3 *db;
+
+  if (argc < 2) {
+    printf("Usage: %s <text>\n", argv[0]);
+    return -1;
+  }
+
+  from = getenv("CGTRANSLATE_FROM");
+  to = getenv("CGTRANSLATE_TO");
+  text = argv[1];
+
+  if (
+    !from || strlen(from) == 0 ||
+    !to || strlen(to) == 0 ||
+    strlen(text) == 0
+  ) {
+    return -1;
+  }
 
 	/*
 	 * Get current working directory (for cookie and cache)
@@ -237,7 +254,7 @@ int main(void)
 		return ret;
 	}
 
-	SHA1_Hash((const uint8_t *)text, sizeof(text) / sizeof(char), sha1_hash);
+	SHA1_Hash((const uint8_t *)text, strlen(text), sha1_hash);
 	sha1_hash[7] = '\0';
 
 	snprintf(cache_dir, sizeof(cache_dir), "%s/data/cache", curdir);
