@@ -27,23 +27,23 @@
 
 
 typedef struct _cgtranslate_t {
-	UCONST CURL			*UCONST ch;
-	UCONST char			to[8];
-	UCONST char			from[8];
-	UCONST size_t			text_len;
-	const char			*UCONST text;
-	UCONST char			*UCONST txt_heap;
-	UCONST char			*UCONST cache_dir;
-	UCONST char			*UCONST cookie_dir;
-	const char			*UCONST error_str;
-	UCONST char			*UCONST err_heap;
+  UCONST CURL      *UCONST ch;
+  UCONST char      to[8];
+  UCONST char      from[8];
+  UCONST size_t      text_len;
+  const char      *UCONST text;
+  UCONST char      *UCONST txt_heap;
+  UCONST char      *UCONST cache_dir;
+  UCONST char      *UCONST cookie_dir;
+  const char      *UCONST error_str;
+  UCONST char      *UCONST err_heap;
 
-	UCONST char			*UCONST res;
-	UCONST size_t			res_len;
-	UCONST size_t			res_alloc;
-	UCONST char			*UCONST clear_res;
+  UCONST char      *UCONST res;
+  UCONST size_t      res_len;
+  UCONST size_t      res_alloc;
+  UCONST char      *UCONST clear_res;
 
-	UCONST struct curl_slist	*UCONST hdr_list;
+  UCONST struct curl_slist  *UCONST hdr_list;
 } cgtranslate_t;
 
 
